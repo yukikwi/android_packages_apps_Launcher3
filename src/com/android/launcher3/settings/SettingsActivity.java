@@ -70,6 +70,7 @@ public class SettingsActivity extends FragmentActivity
     private static final List<String> VALID_PREFERENCE_FRAGMENTS = Collections.singletonList(
             DeveloperOptionsFragment.class.getName());
 
+    private static final String SUGGESTIONS_KEY = "pref_suggestions";
     private static final String DEVELOPER_OPTIONS_KEY = "pref_developer_options";
     private static final String FLAGS_PREFERENCE_KEY = "flag_toggler";
 
@@ -140,7 +141,15 @@ public class SettingsActivity extends FragmentActivity
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) { }
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (Utilities.KEY_DT_GESTURE.equals(key)) {
+                Utilities.restart(this);
+        } else if (Utilities.KEY_DOCK_SEARCH.equals(key)) {
+                Utilities.restart(this);
+        } else if (Utilities.KEY_DOCK_THEME.equals(key)) {
+                Utilities.restart(this);
+        } 
+    }
 
     private boolean startPreference(String fragment, Bundle args, String key) {
         if (Utilities.ATLEAST_P && getSupportFragmentManager().isStateSaved()) {
@@ -192,9 +201,10 @@ public class SettingsActivity extends FragmentActivity
         private boolean mPreferenceHighlighted = false;
         private Preference mDeveloperOptionPref;
 
-        protected static final String GSA_PACKAGE = "com.google.android.googlequicksearchbox";
+        protected static final String DPS_PACKAGE = "com.google.android.as";
 
         private Preference mShowGoogleAppPref;
+         private Preference mShowGoogleBarPref;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -274,12 +284,20 @@ public class SettingsActivity extends FragmentActivity
                     // Only show flag toggler UI if this build variant implements that.
                     return FeatureFlags.showFlagTogglerUi(getContext());
 
+                case SUGGESTIONS_KEY:
+                    // Show if Device Personalization Services is present.
+                    return isDPSEnabled(getContext());
+
                 case DEVELOPER_OPTIONS_KEY:
                     mDeveloperOptionPref = preference;
                     return updateDeveloperOption();
 
                 case KEY_ENABLE_MINUS_ONE:
                     mShowGoogleAppPref = preference;
+                    updateIsGoogleAppEnabled();
+                    return true;
+                case Utilities.KEY_DOCK_SEARCH:
+                    mShowGoogleBarPref = preference;
                     updateIsGoogleAppEnabled();
                     return true;
             }
@@ -305,17 +323,20 @@ public class SettingsActivity extends FragmentActivity
             return showPreference;
         }
 
-        public static boolean isGSAEnabled(Context context) {
-            try {
-                return context.getPackageManager().getApplicationInfo(GSA_PACKAGE, 0).enabled;
-            } catch (PackageManager.NameNotFoundException e) {
-                return false;
+        private void updateIsGoogleAppEnabled() {
+            if (mShowGoogleAppPref != null) {
+                mShowGoogleAppPref.setEnabled(Utilities.isGSAEnabled(getContext()));
+            }
+            if (mShowGoogleBarPref != null) {
+                mShowGoogleBarPref.setEnabled(Utilities.isGSAEnabled(getContext()));
             }
         }
 
-        private void updateIsGoogleAppEnabled() {
-            if (mShowGoogleAppPref != null) {
-                mShowGoogleAppPref.setEnabled(isGSAEnabled(getContext()));
+        public static boolean isDPSEnabled(Context context) {
+            try {
+                return context.getPackageManager().getApplicationInfo(DPS_PACKAGE, 0).enabled;
+            } catch (PackageManager.NameNotFoundException e) {
+                return false;
             }
         }
 

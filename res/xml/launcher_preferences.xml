@@ -18,6 +18,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:launcher="http://schemas.android.com/apk/res-auto">
 
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="pref_workspace_lock"
+        android:persistent="true"
+        android:title="@string/settings_lock_layout_title"
+        android:summaryOn="@string/settings_lock_layout_summary_on"
+        android:summaryOff="@string/settings_lock_layout_summary_off" />
+
     <com.android.launcher3.settings.NotificationDotsPreference
         android:key="pref_icon_badging"
         android:title="@string/notification_dots_title"
@@ -41,6 +49,7 @@
       LAUNCHER_HOME_SCREEN_ROTATION_ENABLED(615)
       LAUNCHER_HOME_SCREEN_ROTATION_DISABLED(616)
     -->
+    
     <SwitchPreference
         android:key="pref_allowRotation"
         android:title="@string/allow_rotation_title"
@@ -72,6 +81,45 @@
         android:summary="@string/pref_dt_gesture_summary"
         android:defaultValue="true"
         android:persistent="true"/>
+
+    <SwitchPreference
+        android:key="pref_dock_search"
+        android:title="@string/dock_search_title"
+        android:summary="@string/dock_search_summary"
+        android:defaultValue="true" />
+
+    <SwitchPreference
+        android:key="pref_dock_theme"
+        android:title="@string/dock_theme_title"
+        android:summary="@string/dock_theme_summary"
+        android:dependency="pref_dock_search" />
+
+    <SwitchPreference
+        android:key="pref_allapps_themed_icons"
+        android:title="@string/pref_themed_icons_title"
+        android:summary="@string/pref_themed_icons_summary"
+        android:defaultValue="false"
+        android:persistent="true" />
+
+    <SwitchPreference
+        android:key="pref_desktop_show_labels"
+        android:title="@string/desktop_show_labels"
+        android:defaultValue="true"
+        android:persistent="true" />
+
+    <SwitchPreference
+        android:key="pref_drawer_show_labels"
+        android:title="@string/drawer_show_labels"
+        android:defaultValue="true"
+        android:persistent="true" />
+
+    <androidx.preference.PreferenceScreen
+        android:persistent="false"
+        android:title="@string/suggestion_pref_screen_title"
+        android:key="pref_suggestions"
+        android:summary="@string/suggestion_pref_screen_desc">
+        <intent android:action="android.settings.ACTION_CONTENT_SUGGESTIONS_SETTINGS" />
+    </androidx.preference.PreferenceScreen>
 
     <androidx.preference.PreferenceScreen
         android:key="pref_developer_options"
