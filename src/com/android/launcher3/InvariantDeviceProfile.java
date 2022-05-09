@@ -174,8 +174,6 @@ public class InvariantDeviceProfile implements OnSharedPreferenceChangeListener 
     public Point defaultWallpaperSize;
     public Rect defaultWidgetPadding;
 
-    private Context mContext;
-
     private final ArrayList<OnIDPChangeListener> mChangeListeners = new ArrayList<>();
     private Context mContext;
 
